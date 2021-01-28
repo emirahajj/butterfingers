@@ -7,8 +7,8 @@ class App extends Component {
     super(props);
     this.state = {
       mystring: '',
-      lettercount: 0,
-      quote: ''
+      lettercount: 0, //keeps track of index to know which child node to alter class
+      quote: '' 
     }
     this.onKeyPressed = this.onKeyPressed.bind(this)
   }
@@ -17,14 +17,19 @@ class App extends Component {
     let baseString = this.test.innerText;
     let counter = this.state.lettercount;
     let stringy = this.state.mystring
-    let newSpan = document.createElement("span");
-    let para = document.getElementById('para')
+    let quoteSpan = document.getElementById('quote');
+    let currNode = quoteSpan.childNodes[counter];
+
+    //let newSpan = document.createElement("span");
+    //let para = document.getElementById('para')
 
     //checks for backspace
     if (e.key==="Backspace"){
+      //need to remove the correct or wrong class on each span
       if (stringy !== ''){
         stringy = stringy.slice(0,-1);
-        para.removeChild(para.lastElementChild);
+        //instead of removing child, we will delete the right/wrong class attribute
+        //para.removeChild(para.lastElementChild);
         counter--;
         this.setState({lettercount: counter})
       }
@@ -35,12 +40,12 @@ class App extends Component {
       stringy += e.key;
       //extract last letter to create separate span
       let lastLetter = stringy[stringy.length-1];
-      newSpan.innerText = lastLetter
+      //newSpan.innerText = lastLetter
       
       //need to check this current letter against the last letter 
-      para.insertAdjacentElement('beforeend', newSpan);
+      //para.insertAdjacentElement('beforeend', newSpan);
 
-      baseString[counter] === lastLetter ? newSpan.classList.add("correct") : newSpan.classList.add("wrong");
+      currNode.innerText === lastLetter ? currNode.classList.add("correct") : currNode.classList.add("wrong");
       counter++;
       this.setState({lettercount: counter})
     } 
