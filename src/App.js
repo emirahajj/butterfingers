@@ -6,69 +6,98 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      mystring: '',
-      lettercount: 0, //keeps track of index to know which child node to alter class
-      quote: '' 
+      mystring: '', //current string the user is typing
+      indexInQuote: 0, //keeps track of index to know which child node to alter class
+      quote: '', //original quote rendered
+      totalChars: 0, //total amount of characters
+      totalMistakes: 0 //total amount of mistakes the user made despite correcting
     }
     this.onKeyPressed = this.onKeyPressed.bind(this)
   }
   
   onKeyPressed(e){
-    let baseString = this.test.innerText;
-    let counter = this.state.lettercount;
+    //let baseString = this.test.innerText;
+    let counter = this.state.indexInQuote;
     let stringy = this.state.mystring
     let quoteSpan = document.getElementById('quote');
     let currNode = quoteSpan.childNodes[counter];
-
-    //let newSpan = document.createElement("span");
-    //let para = document.getElementById('para')
-
-    //checks for backspace
+    let prevNode = quoteSpan.childNodes[counter-1];
+    let nextNode = quoteSpan.childNodes[counter+1];
+    
+    if (this.state.mystring.length === this.state.quote.length){
+      this.refresh();
+    }
+    if(stringy.length < this.state.quote.length){
+          //checks for backspace
     if (e.key==="Backspace"){
       //need to remove the correct or wrong class on each span
       if (stringy !== ''){
         stringy = stringy.slice(0,-1);
         //instead of removing child, we will delete the right/wrong class attribute
-        //para.removeChild(para.lastElementChild);
         counter--;
-        this.setState({lettercount: counter})
+        this.setState({indexInCount: counter})
       }
-    } else if (e.key.length>1){
-      stringy += '';
-    } else if (e.key.length===1) {
+    } 
+    else if (e.key.length>1){ //captures shift and other keys that are not single characters
+      stringy += ''; 
+    } 
+    else if (e.key.length===1) {
       //append to growing string to update state
       stringy += e.key;
       //extract last letter to create separate span
       let lastLetter = stringy[stringy.length-1];
-      //newSpan.innerText = lastLetter
-      
-      //need to check this current letter against the last letter 
-      //para.insertAdjacentElement('beforeend', newSpan);
-
       currNode.innerText === lastLetter ? currNode.classList.add("correct") : currNode.classList.add("wrong");
+      nextNode.classList.add("underline");
+      if (this.state.indexInQuote > 0){
+        currNode.classList.remove("underline");
+      }
       counter++;
-      this.setState({lettercount: counter})
+      this.setState({indexInQuote: counter})
     } 
     this.setState({mystring: stringy});
 
-    //this.bitch.innerText = this.state.mystring;
-    console.log(this.state.mystring);
-    //console.log(textNode);
+    console.log(this.state.mystring, this.state.indexInQuote);
+
+    }
+  
+  }
+
+  refresh(){
+    this.setState({mystring: '', indexInQuote: 0, quote: ''})
+    let quoteSpan = document.getElementById('quote');
+    quoteSpan.innerHTML= '';
+    randomQuote().then(x => {
+      this.setState({quote: x})
+      for (let i = 0; i<x.length+1; i++){
+        let newSpan = document.createElement("span");
+        (i === x.length) ? newSpan.innerText = " " : newSpan.innerText = x[i];
+        quoteSpan.insertAdjacentElement('beforeend', newSpan);
+      }
+      
+      let currNode = quoteSpan.childNodes[0];
+      currNode.classList.add("underline");
+
+    });
+
   }
 
   //when component mounts, make the div in focus
   componentDidMount(){
     this.div.focus();
     let quoteSpan = document.getElementById('quote');
-    //console.log(this.state.mystring);
+
     document.addEventListener('keydown', this.onKeyPressed);
     randomQuote().then(x => {
-      //this.test.innerText = x;
-      for (let i = 0; i<x.length; i++){
+      this.setState({quote: x})
+      for (let i = 0; i<x.length+1; i++){
         let newSpan = document.createElement("span");
-        newSpan.innerText = x[i];
+        (i === x.length) ? newSpan.innerText = " " : newSpan.innerText = x[i];
         quoteSpan.insertAdjacentElement('beforeend', newSpan);
       }
+      
+      let currNode = quoteSpan.childNodes[0];
+      currNode.classList.add("underline");
+
     });
   }
   //removieng eventlistener
@@ -77,12 +106,12 @@ class App extends Component {
   }
 
 render(){
-
+  console.log(this.state.quote);
   return (
     <div className="App" onKeyDown={this.onKeyPressed} ref={(c) => {this.div = c;}}>
       <header className="App-header">
-        <p id="para" ref = {(d) => {this.bitch = d;}}></p>
         <p id="quote" ref = {(e) => {this.test = e;}}></p>
+
       </header>
     </div>
   );
