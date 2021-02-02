@@ -2,6 +2,8 @@ import './App.css';
 import { Component } from 'react';
 import randomQuote from "./quote";
 
+//num of words = numspaces + 1
+
 class App extends Component {
   constructor(props){
     super(props);
@@ -13,7 +15,8 @@ class App extends Component {
       totalMistakes: 0, //total amount of mistakes the user made despite correcting
       startedTyping: false,
       time: 1,
-      start: 0
+      start: 0, 
+      words: 0,
     }
     this.refresh = this.refresh.bind(this);
     this.onKeyPressed = this.onKeyPressed.bind(this);
@@ -23,7 +26,8 @@ class App extends Component {
 
   ticker(){
     this.setState({
-      start: Date.now()
+      start: Date.now(),
+      time: this.state.time
     })
     let timePara = document.getElementById("time");
     setInterval( () => {
@@ -32,18 +36,17 @@ class App extends Component {
       }
       let realtime = Date.now() - this.state.start;
       realtime /= 1000;
-      realtime = Math.floor(realtime);
-      timePara.innerHTML = `0:${60-realtime}`;
-      this.setState({time: 60 - realtime});
-      console.log(this.state.time);
+      realtime = 20 - Math.floor(realtime);
+      timePara.innerHTML = realtime <10? `0:0${realtime}` :`0:${realtime}`;
+      this.setState({time: realtime});
+      //console.log(this.state.time);
     }, 1000);
-    console.log("test");
-
   }
   
   onKeyPressed(e){
     if (this.state.time === 0) return;
     let counter = this.state.indexInQuote;
+    let charCount = this.state.totalChars;
     let quoteSpan = document.getElementById('quote');
     let currNode = quoteSpan.childNodes[counter];
     let prevNode = quoteSpan.childNodes[counter-1];
@@ -69,17 +72,27 @@ class App extends Component {
       currNode.innerText === e.key ? currNode.classList.add("correct") : currNode.classList.add("wrong");
       e.key === " " ? currNode.innerText = this.state.quote[counter] : currNode.innerText = e.key;
       nextNode.classList.add("underline");
-      if (this.state.indexInQuote >= 0){
+      
+      if (e.key !== this.state.quote[counter]){
+        this.setState({totalMistakes: this.state.totalMistakes + 1 })
+      }
+      if (this.state.indexInQuote > 0){
         currNode.classList.remove("underline");
       }
+      if(e.key === " " && currNode.innerText === " "){
+        this.setState({words: this.state.words + 1})
+      }
       counter++;
+      charCount++;
     } 
     this.setState({indexInQuote: counter})
+    this.setState({totalChars: charCount})
+    
     if (this.state.startedTyping === false){
       this.ticker();
     }
     this.setState({startedTyping: true});
-
+    console.log(this.state.totalMistakes, this.state.totalChars);
     //console.log(this.state.indexInQuote);
   }
 
@@ -91,8 +104,6 @@ class App extends Component {
         (i === x.length) ? newSpan.innerText = " " : newSpan.innerText = x[i];
         node.insertAdjacentElement('beforeend', newSpan);
       }
-      let currNode = node.childNodes[0];
-      currNode.classList.add("underline");
     });
   }
 
@@ -119,17 +130,22 @@ class App extends Component {
   }
 
 render(){
-  console.log(this.state.quote);
-  let upperPara = document.getElementById("time");
+  //console.log(this.state.quote);
   
-  if (this.state.time === 0) upperPara.innerText = "WPM: ";
+  if (this.state.time === 0){
+    let upperPara = document.getElementById("time");
+    upperPara.innerText = `WPM: ${this.state.words} Accuracy: ${ (1 - this.state.totalMistakes/this.state.totalChars) * 100 }` 
+    let button = document.createElement("button");
+    let header = document.getElementById("yup");
+    button.innerText = "Try Again";
+    header.insertAdjacentElement('beforeend', button);
+  }
 
   return (
     <div className="App" onKeyDown={this.onKeyPressed} ref={(c) => {this.div = c;}}>
-      <header className="App-header">
+      <header id="yup" className="App-header" >
       <p id="time">Start typing to start the timer! </p>
         <p id="quote" ref = {(e) => {this.test = e;}}></p>
-
       </header>
     </div>
   );
