@@ -8,6 +8,18 @@ body{
   text-align: center;
 }
 
+button{
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 18px;
+  border: none;
+  color: white;
+  background-color: rgb(18, 29, 39);
+  border-radius: 15px;
+  width: 200px;
+  height: 30px;
+  cursor: pointer;
+}
+
 .correct{
   color: greenyellow;
 }

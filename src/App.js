@@ -36,7 +36,7 @@ class App extends Component {
       }
       let realtime = Date.now() - this.state.start;
       realtime /= 1000;
-      realtime = 20 - Math.floor(realtime);
+      realtime = 5 - Math.floor(realtime);
       timePara.innerHTML = realtime <10? `0:0${realtime}` :`0:${realtime}`;
       this.setState({time: realtime});
       console.log(this.state.time);
@@ -150,7 +150,6 @@ render(){
   
   if (this.state.time === 0){
     this.stats();
-
   }
 
   return (
