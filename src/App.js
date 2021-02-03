@@ -8,12 +8,10 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      mystring: '', //current string the user is typing
-      indexInQuote: 0, //keeps track of index to know which child node to alter class
-      quote: '', //original quote rendered
-      totalChars: 0, //total amount of characters
-      totalMistakes: 0, //total amount of mistakes the user made despite correcting
-      startedTyping: false,
+      indexInQuote: 0, //keeps track of index to know which child node to alter class of
+      quote: '', //quote from API call
+      totalChars: 0, //total amount of characters typed
+      totalMistakes: 0, //total amount of mistakes the user made
       time: -1,
       start: 0, 
       words: 0,
@@ -37,13 +35,16 @@ class App extends Component {
       let realtime = Date.now() - this.state.start;
       realtime /= 1000;
       realtime = 5 - Math.floor(realtime);
-      timePara.innerHTML = realtime <10? `0:0${realtime}` :`0:${realtime}`;
+      timePara.innerHTML = realtime < 10 ? `0:0${realtime}` :`0:${realtime}`;
       this.setState({time: realtime});
       console.log(this.state.time);
     }, 1000);
   }
   
   onKeyPressed(e){
+    if(this.state.totalChars === 0){
+      this.ticker();
+    }
     if (this.state.time === 0) return;
     let counter = this.state.indexInQuote;
     let charCount = this.state.totalChars;
@@ -51,6 +52,8 @@ class App extends Component {
     let currNode = quoteSpan.childNodes[counter];
     let prevNode = quoteSpan.childNodes[counter-1];
     let nextNode = quoteSpan.childNodes[counter+1];
+
+
     
     if (this.state.indexInQuote + 1 === this.state.quote.length){
       this.refresh();
@@ -87,10 +90,6 @@ class App extends Component {
     } 
     this.setState({indexInQuote: counter})
     this.setState({totalChars: charCount})
-    
-    if (this.state.startedTyping === false){
-      this.ticker();
-    }
     this.setState({startedTyping: true});
     console.log(this.state.totalMistakes, this.state.totalChars);
     //console.log(this.state.indexInQuote);
