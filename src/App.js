@@ -14,7 +14,7 @@ class App extends Component {
       totalChars: 0, //total amount of characters
       totalMistakes: 0, //total amount of mistakes the user made despite correcting
       startedTyping: false,
-      time: 1,
+      time: -1,
       start: 0, 
       words: 0,
     }
@@ -30,16 +30,16 @@ class App extends Component {
       time: this.state.time
     })
     let timePara = document.getElementById("time");
-    setInterval( () => {
-      if (this.state.time === 0){
-        return;
+    let interval = setInterval( () => {
+      if (this.state.time === 1){
+        clearInterval(interval);
       }
       let realtime = Date.now() - this.state.start;
       realtime /= 1000;
       realtime = 20 - Math.floor(realtime);
       timePara.innerHTML = realtime <10? `0:0${realtime}` :`0:${realtime}`;
       this.setState({time: realtime});
-      //console.log(this.state.time);
+      console.log(this.state.time);
     }, 1000);
   }
   
@@ -107,6 +107,22 @@ class App extends Component {
     });
   }
 
+  stats(){
+    let upperPara = document.getElementById("time");
+    let accuracy = (1 - this.state.totalMistakes/this.state.totalChars) * 100;
+    accuracy = accuracy.toFixed(2);
+    upperPara.innerText = `WPM: ${this.state.words} Accuracy: ${accuracy}%` 
+    let button = document.createElement("button");
+    let header = document.getElementById("yup");
+    button.innerText = "Try Again";
+    button.onclick = this.reload;
+    header.insertAdjacentElement('beforeend', button);
+  }
+
+  reload(){
+    window.location.reload();
+  }
+
   refresh(){
     this.setState({quote: ''})
     let quoteSpan = document.getElementById('quote');
@@ -133,19 +149,15 @@ render(){
   //console.log(this.state.quote);
   
   if (this.state.time === 0){
-    let upperPara = document.getElementById("time");
-    upperPara.innerText = `WPM: ${this.state.words} Accuracy: ${ (1 - this.state.totalMistakes/this.state.totalChars) * 100 }` 
-    let button = document.createElement("button");
-    let header = document.getElementById("yup");
-    button.innerText = "Try Again";
-    header.insertAdjacentElement('beforeend', button);
+    this.stats();
+
   }
 
   return (
     <div className="App" onKeyDown={this.onKeyPressed} ref={(c) => {this.div = c;}}>
       <header id="yup" className="App-header" >
       <p id="time">Start typing to start the timer! </p>
-        <p id="quote" ref = {(e) => {this.test = e;}}></p>
+      <p id="quote" ref = {(e) => {this.test = e;}}></p>
       </header>
     </div>
   );
