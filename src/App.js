@@ -155,7 +155,6 @@ render(){
     <div className="App" onKeyDown={this.onKeyPressed} ref={(c) => {this.div = c;}}>
       <header id="yup" className="App-header">
       <p id="time">Start typing to start the timer! </p>
-
       <p id="quote" ref = {(e) => {this.test = e;}}></p>
       </header>
 
