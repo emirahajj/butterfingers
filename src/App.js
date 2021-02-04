@@ -125,7 +125,7 @@ class App extends Component {
   refresh(){
     this.setState({quote: ''})
     let quoteSpan = document.getElementById('quote');
-    quoteSpan.innerHTML= '';
+    quoteSpan.innerHTML= ' ';
     this.apiCall(quoteSpan);
     this.setState({indexInQuote: 0})
   }
@@ -153,10 +153,12 @@ render(){
 
   return (
     <div className="App" onKeyDown={this.onKeyPressed} ref={(c) => {this.div = c;}}>
-      <header id="yup" className="App-header" >
+      <header id="yup" className="App-header">
       <p id="time">Start typing to start the timer! </p>
+
       <p id="quote" ref = {(e) => {this.test = e;}}></p>
       </header>
+
     </div>
   );
 }

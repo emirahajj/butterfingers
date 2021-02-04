@@ -3,11 +3,6 @@ body{
   font-family: 'IBM Plex Mono', monospace;
 
 }
-
-.App {
-  text-align: center;
-}
-
 button{
   font-family: 'IBM Plex Mono', monospace;
   font-size: 18px;
@@ -35,16 +30,15 @@ button{
 .App {
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  justify-content: center;
+  text-align: center;
 }
 
 .App-header {
-  align-items: center;
-  justify-content: center;
   width: 80%;
+  margin-top: 40vh;
+  height: fit-content;
 }
 
