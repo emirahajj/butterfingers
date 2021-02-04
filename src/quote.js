@@ -3,6 +3,4 @@ async function randomQuote() {
     const data = await response.json();
     return data.content;
   }
-
-
 export default randomQuote;
