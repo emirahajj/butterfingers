@@ -37,7 +37,7 @@ class App extends Component {
       realtime = 20 - Math.floor(realtime);
       timePara.innerHTML = realtime < 10 ? `0:0${realtime}` :`0:${realtime}`;
       this.setState({time: realtime});
-      console.log(this.state.time);
+      //console.log(this.state.time);
     }, 1000);
   }
   
@@ -46,37 +46,41 @@ class App extends Component {
       this.ticker();
     }
     if (this.state.time === 0) return;
-    let counter = this.state.indexInQuote;
-    let charCount = this.state.totalChars;
+    //let counter = this.state.indexInQuote;
+    //let charCount = this.state.totalChars;
     let quoteSpan = document.getElementById('quote');
-    let currNode = quoteSpan.childNodes[counter];
-    let prevNode = quoteSpan.childNodes[counter-1];
-    let nextNode = quoteSpan.childNodes[counter+1];
+    let currNode = quoteSpan.childNodes[this.state.indexInQuote];
+    console.log(quoteSpan.childNodes);
+    let prevNode = quoteSpan.childNodes[this.state.indexInQuote-1];
+    let nextNode = quoteSpan.childNodes[this.state.indexInQuote+1];
 
 
     
     if (this.state.indexInQuote + 1 === this.state.quote.length){
       this.refresh();
+      //this.setState({indexInQuote: counter})
+      //this.setState({totalChars: charCount})
       return;
     }
 
     if (e.key==="Backspace"){
       //need to remove the correct or wrong class on each span
       if (this.state.indexInQuote !== 0){
-        prevNode.innerText = this.state.quote[counter-1];
-        counter--;
+        prevNode.innerText = this.state.quote[this.state.indexInQuote-1];
+        //counter--;
+        this.setState({indexInQuote: this.state.indexInQuote - 1})
         currNode.classList.remove("underline", "correct", "wrong");
         prevNode.classList.remove("correct", "wrong");
         prevNode.classList.add("underline");
-
+        return;
       }
     } 
     else if (e.key.length===1) {
       currNode.innerText === e.key ? currNode.classList.add("correct") : currNode.classList.add("wrong");
-      e.key === " " ? currNode.innerText = this.state.quote[counter] : currNode.innerText = e.key;
+      e.key === " " ? currNode.innerText = this.state.quote[this.state.indexInQuote] : currNode.innerText = e.key;
       nextNode.classList.add("underline");
       
-      if (e.key !== this.state.quote[counter]){
+      if (e.key !== this.state.quote[this.state.indexInQuote]){
         this.setState({totalMistakes: this.state.totalMistakes + 1 })
       }
       if (this.state.indexInQuote > 0){
@@ -85,14 +89,12 @@ class App extends Component {
       if(e.key === " " && currNode.innerText === " "){
         this.setState({words: this.state.words + 1})
       }
-      counter++;
-      charCount++;
+      this.setState({indexInQuote: this.state.indexInQuote + 1})
+      this.setState({totalChars: this.state.totalChars + 1})
     } 
-    this.setState({indexInQuote: counter})
-    this.setState({totalChars: charCount})
-    this.setState({startedTyping: true});
-    console.log(this.state.totalMistakes, this.state.totalChars);
-    //console.log(this.state.indexInQuote);
+    //this.setState({startedTyping: true});
+    //console.log(this.state.totalMistakes, this.state.totalChars);
+    console.log(this.state.indexInQuote);
   }
 
   apiCall(node){
@@ -123,9 +125,9 @@ class App extends Component {
   }
 
   refresh(){
-    this.setState({quote: ''})
+    //this.setState({quote: ''})
     let quoteSpan = document.getElementById('quote');
-    quoteSpan.innerHTML= ' ';
+    quoteSpan.innerHTML= '';
     this.apiCall(quoteSpan);
     this.setState({indexInQuote: 0})
   }
