@@ -30,15 +30,46 @@ button{
 .App {
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
   font-size: calc(10px + 2vmin);
   color: white;
   justify-content: center;
   text-align: center;
+  align-items: center;
+  
 }
 
 .App-header {
   width: 80%;
-  margin-top: 40vh;
+  margin-top: 15vh;
   height: fit-content;
 }
 
+
+.cls-1{fill-opacity:0;stroke-width:1.44px;}
+.cls-1,.cls-10,.cls-11,.cls-2,.cls-5,.cls-7,.cls-8,.cls-9{stroke:rgb(255, 255, 255);}
+.cls-10,.cls-11,.cls-2,.cls-8,.cls-9{fill-opacity:0;stroke-linejoin:round;}
+.cls-2{stroke-width:0.71px;}
+.cls-3,.cls-4{stroke: beige; fill: beige;}
+.cls-4{font-size:24px;font-family:Arial-ItalicMT, Arial;font-style:italic;}
+.cls-5{fill:none;}
+.cls-6{fill:#ffffff;stroke:#ffffff;stroke-opacity:1;stroke-width:1.32px;}
+.cls-7{stroke-width:1.77px;}
+.cls-8{stroke-width:0.82px;}
+.cls-9{stroke-width:0.66px;}
+.cls-10{stroke-width:0.71px;}
+.cls-11{stroke-width:0.86px;}
+
+
+.highlight{
+  fill: #07662c;
+  fill-opacity: 1;
+}
+svg{
+  width: 50vw;
+  height: 600%;
+}
+.keeb{
+  width: fit-content;
+
+}

@@ -1,6 +1,7 @@
 import './App.css';
 import { Component } from 'react';
 import randomQuote from "./quote";
+import {ReactComponent as ReactLogo} from "./my.svg";
 
 //num of words = numspaces + 1
 
@@ -49,11 +50,14 @@ class App extends Component {
     //let counter = this.state.indexInQuote;
     //let charCount = this.state.totalChars;
     let quoteSpan = document.getElementById('quote');
+    let key = document.getElementById(`${e.key}`);
+    key.classList.add("highlight");
+    console.log(key);
     let currNode = quoteSpan.childNodes[this.state.indexInQuote];
     console.log(quoteSpan.childNodes);
     let prevNode = quoteSpan.childNodes[this.state.indexInQuote-1];
     let nextNode = quoteSpan.childNodes[this.state.indexInQuote+1];
-
+    console.log(e.key);
 
     
     if (this.state.indexInQuote + 1 === this.state.quote.length){
@@ -155,12 +159,17 @@ render(){
 
   return (
     <div className="App" onKeyDown={this.onKeyPressed} ref={(c) => {this.div = c;}}>
-      <header id="yup" className="App-header">
-      <p id="time">Start typing to start the timer! </p>
-      <p id="quote" ref = {(e) => {this.test = e;}}></p>
-      </header>
+        <div id="yup" className="App-header">
+          <p id="time">Start typing to start the timer!</p>
+          <p id="quote" ref = {(e) => {this.test = e;}}></p>
+        </div>
+      <div className="keeb">
+      <ReactLogo/>
+      </div>
+
 
     </div>
+    
   );
 }
 }
